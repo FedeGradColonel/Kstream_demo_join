@@ -1,0 +1,27 @@
+server:
+  port: 9070
+
+spring:
+  application:
+    name: Kstream-demo-join
+
+  kafka:
+    properties:
+      sasl.mechanism: NONE
+      security.protocol: PLAINTEXT
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: "all"
+      compression-type: "snappy" #type of compression message
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: ${kafka.environment}_TAB_DEMO_JOIN # CHOSE NAME
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      enable-auto-commit: false
+    streams:
+      bootstrap-servers: localhost:9092
+      application-id: ${kafka.environment}-join-
