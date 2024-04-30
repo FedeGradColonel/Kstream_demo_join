@@ -8,6 +8,7 @@ public class KstreamDemoJoinApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(KstreamDemoJoinApplication.class, args);
+
     }
 
 }

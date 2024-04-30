@@ -17,11 +17,11 @@ spring:
       compression-type: "snappy" #type of compression message
     consumer:
       bootstrap-servers: localhost:9092
-      group-id: ${kafka.environment}_TAB_DEMO_JOIN # CHOSE NAME
+      group-id: DEV_TAB_DEMO_JOIN # CHOSE NAME
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: latest
       enable-auto-commit: false
     streams:
       bootstrap-servers: localhost:9092
-      application-id: ${kafka.environment}-join-
+      application-id: DEV-join-
