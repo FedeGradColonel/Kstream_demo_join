@@ -71,30 +71,30 @@ services:
       timeout: 10s
       retries: 6
 
-  init-kafka:
-    image: confluentinc/cp-kafka:7.3.2
-    depends_on:
-      - broker
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-      "
-      # blocks until kafka is reachable
-      kafka-topics --bootstrap-server broker:29092 --list
-
-      echo -e 'Creating kafka topics'
-      declare -a topics=(
-                  "DEV.Appointment"
-                  "DEV.Practitioner"
-                   )
-
-      for i in "$${topics[@]}"
-      do
-      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic $$i --replication-factor 1 --partitions 1
-      done
-
-      echo -e 'Existing topics:'
-      kafka-topics --bootstrap-server broker:29092 --list
-      "
+#   init-kafka:
+#     image: confluentinc/cp-kafka:7.3.2
+#     depends_on:
+#       - broker
+#     entrypoint: [ '/bin/sh', '-c' ]
+#     command: |
+#       "
+#       # blocks until kafka is reachable
+#       kafka-topics --bootstrap-server broker:29092 --list
+#
+#       echo -e 'Creating kafka topics'
+#       declare -a topics=(
+#                   "DEV.Appointment"
+#                   "DEV.Practitioner"
+#                    )
+#
+#       for i in "$${topics[@]}"
+#       do
+#       kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic $$i --replication-factor 1 --partitions 1
+#       done
+#
+#       echo -e 'Existing topics:'
+#       kafka-topics --bootstrap-server broker:29092 --list
+#       "
 
 volumes:
   redis:

@@ -16,10 +16,10 @@ public class TopicConfiguration {
     @Bean
     public NewTopic appointmentTopic() {
         return TopicBuilder.name(APPOINTMENT_TOPIC)
-                .partitions(3)
+                .partitions(1)
                 .replicas(1)
                 .config(TopicConfig.RETENTION_MS_CONFIG, "604800000")
-                .config(TopicConfig.SEGMENT_MS_CONFIG, "604800000")
+//                .config(TopicConfig.SEGMENT_MS_CONFIG, "604800000")
                 .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "CreateTime")
                 .build();
     }
@@ -27,11 +27,11 @@ public class TopicConfiguration {
     @Bean
     public NewTopic practitionerTopic() {
         return TopicBuilder.name(PRACTITIONER_TOPIC)
-                .partitions(3)
+                .partitions(1)
                 .replicas(1)
                 .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT)
                 .config(TopicConfig.RETENTION_MS_CONFIG, "-1")
-                .config(TopicConfig.SEGMENT_MS_CONFIG, "604800000")
+//                .config(TopicConfig.SEGMENT_MS_CONFIG, "604800000")
                 .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "CreateTime")
                 .build();
     }
@@ -39,9 +39,9 @@ public class TopicConfiguration {
     @Bean
     public NewTopic outputTopic() {
         return TopicBuilder.name(APPOINTMENT_PRACTITONER_TOPIC)
-                .partitions(3)
+                .partitions(1)
                 .replicas(1)
-                .config(TopicConfig.SEGMENT_MS_CONFIG, "604800000")
+//                .config(TopicConfig.SEGMENT_MS_CONFIG, "604800000")
                 .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "CreateTime")
                 .build();
     }
