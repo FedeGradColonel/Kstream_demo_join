@@ -6,6 +6,8 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.hl7.fhir.r4.model.Appointment;
+import org.hl7.fhir.r4.model.Practitioner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +30,10 @@ public class KafkaStreamProcessor {
         StreamsBuilder builder = new StreamsBuilder();
 
         // Definizione del primo stream 'appointment'
-        KStream<String, String> appointmentStream = builder.stream("appointment");
+        KStream<String, Appointment> appointmentStream = builder.stream("appointment");
 
         // Definizione del secondo stream 'practitioner' come KTable
-        KTable<String, String> practitionerTable = builder.table("practitioner");
+        KTable<String, Practitioner> practitionerTable = builder.table("practitioner");
 
         // Join tra lo stream 'appointment' e la 'practitioner' KTable
         appointmentStream
