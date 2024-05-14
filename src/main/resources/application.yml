@@ -24,4 +24,4 @@ spring:
       enable-auto-commit: false
     streams:
       bootstrap-servers: localhost:9092
-      application-id: DEV-join-
+      application-id: kafka-stream-join-demo
