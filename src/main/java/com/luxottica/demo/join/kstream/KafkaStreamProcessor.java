@@ -17,6 +17,10 @@ import java.util.Properties;
 @Configuration
 public class KafkaStreamProcessor {
 
+    private final String APPOINTMENT_TOPIC = "appointment";
+    private final String PRACTITIONER_TOPIC = "practitioner";
+    private final String OUTPUT_JOIN_TOPIC = "practitioner";
+
     @Value("${spring.kafka.streams.bootstrap-servers}")
     private String boostrapServer;
 
@@ -30,26 +34,18 @@ public class KafkaStreamProcessor {
         StreamsBuilder builder = new StreamsBuilder();
 
         // Definizione del primo stream 'appointment'
-        KTable<String, Appointment> appointmentStream = builder.table("appointment",
+        KTable<String, Appointment> appointmentStream = builder.table(APPOINTMENT_TOPIC,
                 Consumed.with(Serdes.String(), Serdes.serdeFrom(new FhirSerializer<>(), new FhirDeserializer<>(Appointment.class))));
 
         // Definizione del secondo stream 'practitioner' come KTable
-        KTable<String, Practitioner> practitionerTable = builder.table("practitioner",
+        KTable<String, Practitioner> practitionerTable = builder.table(PRACTITIONER_TOPIC,
                 Consumed.with(Serdes.String(), Serdes.serdeFrom(new FhirSerializer<>(), new FhirDeserializer<>(Practitioner.class))));
 
         // Join tra lo stream 'appointment' e la 'practitioner' KTable
         appointmentStream
-                .join(practitionerTable,
-                        (appointmentValue, practitionerValue) -> {
-                            // Qui gestisci il caso in cui non ci sia una corrispondenza in practitioner
-                            if (practitionerValue == null) {
-                                return "Appointment: " + appointmentValue + ", Practitioner: <not found>";
-                            } else {
-                                return "Appointment: " + appointmentValue + ", Practitioner: " + practitionerValue;
-                            }
-                        })
+                .join(practitionerTable, new MyValueJoiner())
                 .toStream()
-                .to("appointment-practitioner-join");
+                .to(OUTPUT_JOIN_TOPIC);
 
         KafkaStreams streams = new KafkaStreams(builder.build(), properties);
         streams.start();
