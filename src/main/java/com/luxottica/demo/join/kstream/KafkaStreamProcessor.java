@@ -4,7 +4,7 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KTable;
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Practitioner;
@@ -30,10 +30,12 @@ public class KafkaStreamProcessor {
         StreamsBuilder builder = new StreamsBuilder();
 
         // Definizione del primo stream 'appointment'
-        KStream<String, Appointment> appointmentStream = builder.stream("appointment");
+        KTable<String, Appointment> appointmentStream = builder.table("appointment",
+                Consumed.with(Serdes.String(), Serdes.serdeFrom(new FhirSerializer<>(), new FhirDeserializer<>(Appointment.class))));
 
         // Definizione del secondo stream 'practitioner' come KTable
-        KTable<String, Practitioner> practitionerTable = builder.table("practitioner");
+        KTable<String, Practitioner> practitionerTable = builder.table("practitioner",
+                Consumed.with(Serdes.String(), Serdes.serdeFrom(new FhirSerializer<>(), new FhirDeserializer<>(Practitioner.class))));
 
         // Join tra lo stream 'appointment' e la 'practitioner' KTable
         appointmentStream
@@ -46,6 +48,7 @@ public class KafkaStreamProcessor {
                                 return "Appointment: " + appointmentValue + ", Practitioner: " + practitionerValue;
                             }
                         })
+                .toStream()
                 .to("appointment-practitioner-join");
 
         KafkaStreams streams = new KafkaStreams(builder.build(), properties);
